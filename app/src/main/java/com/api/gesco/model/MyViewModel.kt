@@ -1,0 +1,120 @@
+package com.api.gesco.model
+
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.api.gesco.calls.getDisciplines
+import com.api.gesco.calls.getEvents
+import com.api.gesco.calls.getFrequency
+import com.api.gesco.calls.getGridHour
+import com.api.gesco.calls.getStudent
+import com.api.gesco.calls.loginStudent
+import com.api.gesco.service.response.aluno.AlunoResponse
+import com.api.gesco.service.response.discipline.DisciplineResponseList
+import com.api.gesco.service.response.events.Events
+import com.api.gesco.service.response.events.EventsResponseList
+import com.api.gesco.service.response.frequency.FrequencyResponseList
+import com.api.gesco.service.response.gridHour.GridHourResponseList
+import com.api.gesco.service.response.login.AuthTokenResponse
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import java.util.Objects
+
+class MyViewModel : ViewModel() {
+    var alunoResponse = AlunoResponse(
+        0,"","","","","",0,"",0,"","","","","","","",0,"","",0,0
+    )
+    var gridHour = GridHourResponseList(emptyMap(), emptyList(), "", 0)
+
+    var eventsList = EventsResponseList(emptyMap(), Events(emptyList()), "", 0)
+    var disciplineList = DisciplineResponseList(emptyMap(), emptyList(), "", 0)
+    var frequencyList = FrequencyResponseList(emptyMap(), emptyList(), "", 0)
+
+
+    private val _login = MutableStateFlow<AuthTokenResponse>(AuthTokenResponse(""))
+    val login: StateFlow<AuthTokenResponse> get() = _login
+
+    private val _aluno = MutableStateFlow<AlunoResponse>(alunoResponse)
+    val aluno: StateFlow<AlunoResponse> get() = _aluno
+
+    private val _grid = MutableStateFlow<GridHourResponseList>(gridHour)
+    val grid: StateFlow<GridHourResponseList> get() = _grid
+
+    private val _events = MutableStateFlow<EventsResponseList>(eventsList)
+    val events: StateFlow<EventsResponseList> get() = _events
+
+    private val _discipline = MutableStateFlow<DisciplineResponseList>(disciplineList)
+    val discipline: StateFlow<DisciplineResponseList> get() = _discipline
+
+    private val _frequency = MutableStateFlow<FrequencyResponseList>(frequencyList)
+    val frequency: StateFlow<FrequencyResponseList> get() = _frequency
+
+    fun fetchLogin(body: ModelLogin, context: Context, preferences: SharedPreferences) {
+        viewModelScope.launch {
+            try {
+                val result = loginStudent(body, context, preferences)
+                _login.value = result
+            } catch (e: Exception) {
+                println(e)
+            }
+        }
+    }
+
+    fun fetchAluno(context: Context){
+        viewModelScope.launch {
+            try{
+                val result = getStudent(context)
+                _aluno.value = result
+            }catch (e: Exception){
+                println(e)
+            }
+        }
+    }
+
+    fun fetchGrid(context: Context, turma: Int){
+        viewModelScope.launch {
+            try {
+                val result = getGridHour(context, turma)
+                _grid.value = result
+            }catch (e: Exception){
+                println(e)
+            }
+        }
+    }
+
+    fun fetchEvents(context: Context, escola: Int){
+        viewModelScope.launch {
+            try {
+                val result = getEvents(context, escola)
+                _events.value = result
+            }catch (e: Exception){
+                println(e)
+            }
+        }
+    }
+
+    fun fetchDisciplines(context: Context, aluno: Int){
+        viewModelScope.launch {
+            try {
+                val result = getDisciplines(context, aluno)
+                _discipline.value = result
+            }catch (e: Exception){
+                println(e)
+            }
+        }
+    }
+
+    fun fetchFrequency(context: Context, aluno: Int, disciplina: Int){
+        viewModelScope.launch {
+            try {
+                val result = getFrequency(context,aluno,disciplina)
+                _frequency.value = result
+            }catch (e: Exception){
+                println(e)
+            }
+        }
+    }
+}
