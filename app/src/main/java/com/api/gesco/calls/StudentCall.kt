@@ -3,6 +3,7 @@ package com.api.gesco.calls
 import android.content.Context
 import android.util.Log
 import com.api.gesco.service.config.RetrofitFactory
+import com.api.gesco.service.response.activities.ActivitiesResponseList
 import com.api.gesco.service.response.aluno.AlunoResponse
 import com.api.gesco.service.response.discipline.DisciplineResponseList
 import com.api.gesco.service.response.events.Events
@@ -132,6 +133,34 @@ suspend fun getFrequency(context: Context, aluno: Int, disciplina : Int): Freque
     return withContext(Dispatchers.IO) {
         try {
             val response = RetrofitFactory(context).alunoService().getFrequencys(aluno,disciplina).execute()
+
+            if(response.isSuccessful){
+                Log.e("fetch", "${response.body()}")
+                response.body()!!
+            }else{
+                events
+            }
+
+        } catch (e: HttpException) {
+            Log.e("LinesScreen", "Erro na chamada da API: ${e.message}")
+            return@withContext events
+        } catch (e: Exception) {
+            Log.e("LinesScreen", "Erro desconhecido: ${e.message}")
+            return@withContext events
+        }
+    }
+}
+
+suspend fun getActivities(context: Context, turma: Int): ActivitiesResponseList {
+    var events = ActivitiesResponseList(
+        emptyMap(),
+        emptyList(),
+        "",
+        0
+    )
+    return withContext(Dispatchers.IO) {
+        try {
+            val response = RetrofitFactory(context).ActivitiesService().getAtivities(turma).execute();
 
             if(response.isSuccessful){
                 Log.e("fetch", "${response.body()}")

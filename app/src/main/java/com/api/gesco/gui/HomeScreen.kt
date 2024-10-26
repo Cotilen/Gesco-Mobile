@@ -53,7 +53,7 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel, context: Co
     )
     var categorias = arrayOf(
         Item(image = painterResource(R.drawable.alarm), name = "Horário", navigation = "gridHour"),
-        Item(image = painterResource(R.drawable.atividade), name = "Atividades", navigation = "gridHour"),
+        Item(image = painterResource(R.drawable.atividade), name = "Atividades", navigation = "activities"),
         Item(image = painterResource(R.drawable.calendar), name = "Frequencia", navigation = "discipline"),
         Item(image = painterResource(R.drawable.events), name = "Eventos", navigation = "events")
     )
@@ -132,6 +132,8 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel, context: Co
                                 viewModel.fetchEvents(context, aluno.id_escola)
                             }else if(it.name == "Frequencia"){
                                 viewModel.fetchDisciplines(context, aluno.id)
+                            }else if(it.name == "Atividades"){
+                                viewModel.fetchActivities(context, aluno.id_turma)
                             }
                             navController.navigate(it.navigation)
                                    },

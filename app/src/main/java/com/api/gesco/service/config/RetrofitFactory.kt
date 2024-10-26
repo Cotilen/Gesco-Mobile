@@ -1,6 +1,7 @@
 package com.api.gesco.service.config
 
 import android.content.Context
+import com.api.gesco.service.ActivitiesService
 import com.api.gesco.service.AlunoService
 import com.api.gesco.service.AuthService
 import com.api.gesco.service.GridHourService
@@ -42,6 +43,10 @@ class RetrofitFactory(private val context: Context) {
 
     fun alunoService(): AlunoService{
         return retrofitFactory.create((AlunoService::class.java))
+    }
+
+    fun ActivitiesService(): ActivitiesService{
+        return retrofitFactory.create(ActivitiesService::class.java)
     }
 
 

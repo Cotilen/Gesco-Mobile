@@ -18,6 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.api.gesco.gui.ActivitiesScreen
 import com.api.gesco.gui.DisciplineScreen
 import com.api.gesco.gui.EventsScreen
 import com.api.gesco.gui.FrequencyScreen
@@ -28,6 +29,7 @@ import com.api.gesco.model.MyViewModel
 import com.api.gesco.ui.theme.GescoTheme
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -77,6 +79,7 @@ fun Gesco(name: String, modifier: Modifier = Modifier) {
             composable("events") { EventsScreen(navController,viewModel, context)  }
             composable("frequency") { FrequencyScreen(navController,viewModel, context)  }
             composable("discipline") { DisciplineScreen(navController,viewModel, context)  }
+            composable("activities") { ActivitiesScreen(navController,viewModel, context)  }
         }
     }
 

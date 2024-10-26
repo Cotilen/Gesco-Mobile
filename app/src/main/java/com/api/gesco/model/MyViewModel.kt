@@ -5,12 +5,14 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.api.gesco.calls.getActivities
 import com.api.gesco.calls.getDisciplines
 import com.api.gesco.calls.getEvents
 import com.api.gesco.calls.getFrequency
 import com.api.gesco.calls.getGridHour
 import com.api.gesco.calls.getStudent
 import com.api.gesco.calls.loginStudent
+import com.api.gesco.service.response.activities.ActivitiesResponseList
 import com.api.gesco.service.response.aluno.AlunoResponse
 import com.api.gesco.service.response.discipline.DisciplineResponseList
 import com.api.gesco.service.response.events.Events
@@ -32,6 +34,7 @@ class MyViewModel : ViewModel() {
     var eventsList = EventsResponseList(emptyMap(), Events(emptyList()), "", 0)
     var disciplineList = DisciplineResponseList(emptyMap(), emptyList(), "", 0)
     var frequencyList = FrequencyResponseList(emptyMap(), emptyList(), "", 0)
+    var activitiesList = ActivitiesResponseList(emptyMap(), emptyList(), "", 0)
 
 
     private val _login = MutableStateFlow<AuthTokenResponse>(AuthTokenResponse(""))
@@ -51,6 +54,9 @@ class MyViewModel : ViewModel() {
 
     private val _frequency = MutableStateFlow<FrequencyResponseList>(frequencyList)
     val frequency: StateFlow<FrequencyResponseList> get() = _frequency
+
+    private val _activities = MutableStateFlow<ActivitiesResponseList>(activitiesList)
+    val activities: StateFlow<ActivitiesResponseList> get() = _activities
 
     fun fetchLogin(body: ModelLogin, context: Context, preferences: SharedPreferences) {
         viewModelScope.launch {
@@ -112,6 +118,17 @@ class MyViewModel : ViewModel() {
             try {
                 val result = getFrequency(context,aluno,disciplina)
                 _frequency.value = result
+            }catch (e: Exception){
+                println(e)
+            }
+        }
+    }
+
+    fun fetchActivities(context: Context, turma: Int){
+        viewModelScope.launch {
+            try {
+                val result = getActivities(context, turma)
+                _activities.value = result
             }catch (e: Exception){
                 println(e)
             }
