@@ -20,8 +20,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -42,7 +47,15 @@ import java.util.Date
 @Composable
 fun FrequencyScreen(navController: NavController, viewModel: MyViewModel, context: Context){
     val frequency by viewModel.frequency.collectAsState()
+    val frequencyData by viewModel.frequencyData.collectAsState()
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    var geral by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(frequencyData) {
+        if (frequencyData.total != 0){
+            geral = ((frequencyData.presente.toFloat() / frequencyData.total.toFloat()) * 100).toInt()
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -75,7 +88,7 @@ fun FrequencyScreen(navController: NavController, viewModel: MyViewModel, contex
                         )
 
                         Text(
-                            text = "0",
+                            text = "${frequencyData.presente}",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp
                         )
@@ -103,7 +116,7 @@ fun FrequencyScreen(navController: NavController, viewModel: MyViewModel, contex
                         )
 
                         Text(
-                            text = "0",
+                            text = "${frequencyData.ausente}",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp
                         )
@@ -138,7 +151,7 @@ fun FrequencyScreen(navController: NavController, viewModel: MyViewModel, contex
                         )
 
                         Text(
-                            text = "0",
+                            text = "$geral%",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp
                         )
@@ -169,7 +182,6 @@ fun FrequencyScreen(navController: NavController, viewModel: MyViewModel, contex
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 10.dp)
                             .background(color = cor),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,

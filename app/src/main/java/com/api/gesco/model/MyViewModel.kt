@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.api.gesco.calls.getActivities
+import com.api.gesco.calls.getDataFrequency
 import com.api.gesco.calls.getDisciplines
 import com.api.gesco.calls.getEvents
 import com.api.gesco.calls.getFrequency
@@ -17,6 +18,8 @@ import com.api.gesco.service.response.aluno.AlunoResponse
 import com.api.gesco.service.response.discipline.DisciplineResponseList
 import com.api.gesco.service.response.events.Events
 import com.api.gesco.service.response.events.EventsResponseList
+import com.api.gesco.service.response.frequency.FrequencyDataResponse
+import com.api.gesco.service.response.frequency.FrequencyDataResponseList
 import com.api.gesco.service.response.frequency.FrequencyResponseList
 import com.api.gesco.service.response.gridHour.GridHourResponseList
 import com.api.gesco.service.response.login.AuthTokenResponse
@@ -34,6 +37,7 @@ class MyViewModel : ViewModel() {
     var eventsList = EventsResponseList(emptyMap(), Events(emptyList()), "", 0)
     var disciplineList = DisciplineResponseList(emptyMap(), emptyList(), "", 0)
     var frequencyList = FrequencyResponseList(emptyMap(), emptyList(), "", 0)
+    var frequencyDataList = FrequencyDataResponse(0,0,0)
     var activitiesList = ActivitiesResponseList(emptyMap(), emptyList(), "", 0)
 
 
@@ -54,6 +58,9 @@ class MyViewModel : ViewModel() {
 
     private val _frequency = MutableStateFlow<FrequencyResponseList>(frequencyList)
     val frequency: StateFlow<FrequencyResponseList> get() = _frequency
+
+    private val _frequencyData = MutableStateFlow<FrequencyDataResponse>(frequencyDataList)
+    val frequencyData: StateFlow<FrequencyDataResponse> get() = _frequencyData
 
     private val _activities = MutableStateFlow<ActivitiesResponseList>(activitiesList)
     val activities: StateFlow<ActivitiesResponseList> get() = _activities
@@ -130,6 +137,19 @@ class MyViewModel : ViewModel() {
                 val result = getActivities(context, turma)
                 _activities.value = result
             }catch (e: Exception){
+                println(e)
+            }
+        }
+    }
+
+    fun fetchFrequencyData(context: Context, disciplina: Int){
+        viewModelScope.launch {
+            try {
+                val result = getDataFrequency(context, disciplina)
+                Log.e("teste", "$result")
+                _frequencyData.value = result.body[0]
+            }catch (e: Exception){
+                Log.e("erro", "$e")
                 println(e)
             }
         }

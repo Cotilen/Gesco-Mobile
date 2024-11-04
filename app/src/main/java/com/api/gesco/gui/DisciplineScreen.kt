@@ -51,6 +51,7 @@ fun DisciplineScreen(navController: NavController, viewModel: MyViewModel, conte
                         .padding(20.dp)
                         .clickable {
                             viewModel.fetchFrequency(context, aluno.id, it.id)
+                            viewModel.fetchFrequencyData(context, it.id)
                             navController.navigate("frequency")
                         },
                     elevation = CardDefaults.cardElevation(8.dp),

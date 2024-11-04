@@ -5,6 +5,7 @@ import com.api.gesco.service.response.aluno.AlunoResponse
 import com.api.gesco.service.response.discipline.DisciplineResponseList
 import com.api.gesco.service.response.events.EventsResponse
 import com.api.gesco.service.response.events.EventsResponseList
+import com.api.gesco.service.response.frequency.FrequencyDataResponseList
 import com.api.gesco.service.response.frequency.FrequencyResponseList
 import com.api.gesco.service.response.gridHour.GridHourResponseList
 import com.api.gesco.service.response.login.AuthTokenResponse
@@ -27,4 +28,7 @@ interface AlunoService {
 
     @GET("aluno/{aluno}/frequencia/{disciplina}")
     fun getFrequencys(@Path("aluno") aluno: Int, @Path("disciplina") disciplina: Int): Call<FrequencyResponseList>
+
+    @GET("aluno/frequencia/{id}")
+    fun getFrequencyData(@Path("id") discipline: Int): Call<FrequencyDataResponseList>
 }
