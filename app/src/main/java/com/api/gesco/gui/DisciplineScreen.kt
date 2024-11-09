@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,8 +22,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,39 +45,56 @@ fun DisciplineScreen(navController: NavController, viewModel: MyViewModel, conte
             .background(colorResource(R.color.white)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LazyColumn() {
-            items(discipline.body){
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .padding(20.dp)
-                        .clickable {
-                            viewModel.fetchFrequency(context, aluno.id, it.id)
-                            viewModel.fetchFrequencyData(context, it.id)
-                            navController.navigate("frequency")
-                        },
-                    elevation = CardDefaults.cardElevation(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = colorResource(R.color.white)),
-                    shape = RoundedCornerShape(50.dp),
-                    border = BorderStroke(2.dp, color = colorResource(R.color.azul))
-                ){
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = it.nome,
-                            color = colorResource(R.color.azul),
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+        if (discipline.body.isNotEmpty()){
+            LazyColumn() {
+                items(discipline.body){
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .padding(20.dp)
+                            .clickable {
+                                viewModel.fetchFrequency(context, aluno.id, it.id)
+                                viewModel.fetchFrequencyData(context, it.id)
+                                navController.navigate("frequency")
+                            },
+                        elevation = CardDefaults.cardElevation(8.dp),
+                        colors = CardDefaults.cardColors(containerColor = colorResource(R.color.white)),
+                        shape = RoundedCornerShape(50.dp),
+                        border = BorderStroke(2.dp, color = colorResource(R.color.azul))
+                    ){
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = it.nome,
+                                color = colorResource(R.color.azul),
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+
                     }
-
-
                 }
             }
+
+        }else{
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .background(  brush = Brush.linearGradient(
+                        colors = listOf(Color(0xFFF9F45C), Color(0xFFFFB600)),
+                    )),
+                horizontalArrangement = Arrangement.Center,
+
+                ) {       Text(
+                text = stringResource(R.string.noFoundDisc),
+                color = colorResource(R.color.azul),
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Black
+            )}
         }
 
     }

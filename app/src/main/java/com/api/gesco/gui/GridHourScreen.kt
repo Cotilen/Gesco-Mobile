@@ -28,6 +28,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,7 +51,13 @@ import java.time.LocalTime
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GridHourScreen(navController: NavController, viewModel: MyViewModel, context: Context) {
+    val aluno by viewModel.aluno.collectAsState()
     val grid by viewModel.grid.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchGrid(context, aluno.id_turma)
+    }
+
     val semana = listOf(
         "Segunda-feira",
         "Terça-feira",
@@ -128,6 +135,7 @@ fun GridHourScreen(navController: NavController, viewModel: MyViewModel, context
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
                                             text = "$hora",
@@ -137,14 +145,21 @@ fun GridHourScreen(navController: NavController, viewModel: MyViewModel, context
                                             fontWeight = FontWeight.Black
                                         )
 
-                                        Spacer(Modifier.width(100.dp))
-
                                         Column {
                                             Text(
                                                 text = item.disciplina,
                                                 color = colorResource(R.color.amarelo),
                                                 fontSize = 18.sp,
                                                 fontWeight = FontWeight.Black
+                                            )
+                                            Spacer(Modifier.height(5.dp))
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .height(2.dp)
+                                                    .background(  brush = Brush.linearGradient(
+                                                        colors = listOf(Color(0xFFF9F45C), Color(0xFFFFB600)),
+                                                    ))
                                             )
                                             Spacer(Modifier.height(5.dp))
                                             Text(

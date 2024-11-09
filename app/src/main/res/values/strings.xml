@@ -4,4 +4,11 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="events">Events</string>
+    <string name="frequency">Frequency</string>
+    <string name="activies">Activities</string>
+    <string name="schedule">Schedule</string>
+    <string name="noFoundAct">No activity found!</string>
+    <string name="noFoundDisc">No discipline found!</string>
+    <string name="noFoundEvents">No events found!</string>
 </resources>

@@ -46,6 +46,7 @@ import java.util.Date
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FrequencyScreen(navController: NavController, viewModel: MyViewModel, context: Context){
+    val aluno by viewModel.aluno.collectAsState()
     val frequency by viewModel.frequency.collectAsState()
     val frequencyData by viewModel.frequencyData.collectAsState()
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -55,6 +56,10 @@ fun FrequencyScreen(navController: NavController, viewModel: MyViewModel, contex
         if (frequencyData.total != 0){
             geral = ((frequencyData.presente.toFloat() / frequencyData.total.toFloat()) * 100).toInt()
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchDisciplines(context, aluno.id)
     }
 
     Column(

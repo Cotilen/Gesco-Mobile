@@ -18,6 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.api.gesco.components.Navigation
 import com.api.gesco.gui.ActivitiesScreen
 import com.api.gesco.gui.DisciplineScreen
 import com.api.gesco.gui.EventsScreen
@@ -62,8 +63,7 @@ fun Gesco(name: String, modifier: Modifier = Modifier) {
         bottomBar = {
             when (currentRoute.value) {
                 "login" -> {}
-                "home" -> {}
-//                else -> Navigation(navController = navController)
+                else -> Navigation(navController = navController)
             }
         },
         modifier = modifier

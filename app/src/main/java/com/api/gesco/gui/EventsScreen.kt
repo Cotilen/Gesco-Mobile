@@ -38,6 +38,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -59,25 +60,17 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EventsScreen(navController: NavController, viewModel: MyViewModel,context: Context) {
+    val events by viewModel.events.collectAsState()
+    val aluno by viewModel.aluno.collectAsState()
+
     var selectedMonth by rememberSaveable {
         mutableIntStateOf(LocalDate.now().monthValue)
     }
-    val events by viewModel.events.collectAsState()
-    println(events)
-//
-//    val currentDate = LocalDate.now()
-//    val lastDayOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth())
-//
-//    val dates = mutableListOf<LocalDate>()
-//
-//    var dateToAdd = currentDate
-//
-//    while (dateToAdd <= lastDayOfMonth) {
-//        dates.add(dateToAdd)
-//        dateToAdd = dateToAdd.plusDays(1)
-//    }
 
-    // Obtém o último mês do ano atual
+    LaunchedEffect(Unit) {
+        viewModel.fetchEvents(context, aluno.id_escola)
+    }
+
     val year: Long = 12L - YearMonth.now().monthValue
     val lastMonthOfYear = YearMonth.now().plusMonths(year)
 
@@ -144,59 +137,76 @@ fun EventsScreen(navController: NavController, viewModel: MyViewModel,context: C
 
         val filteredEvents = filterConsultsByCurrentMonth(events.body.eventos)
 
-        LazyColumn() {
-            items(filteredEvents) { evento ->
-                var day = evento.dia.split("-")
+        if (filteredEvents.isNotEmpty()){
+            LazyColumn() {
+                items(filteredEvents) { evento ->
+                    val day = evento.dia.split("-")
 
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp)
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Card(
-                        modifier = Modifier.size(width = 50.dp, height = 50.dp),
-                        shape = CircleShape,
-                        colors = CardDefaults.cardColors(colorResource(R.color.amarelo)),
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp)
+                            .padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                        Card(
+                            modifier = Modifier.size(width = 50.dp, height = 50.dp),
+                            shape = CircleShape,
+                            colors = CardDefaults.cardColors(colorResource(R.color.amarelo)),
                         ) {
-                            Text(
-                                text = day[2],
-                                color = colorResource(R.color.azul),
-                                fontWeight = FontWeight.Black
-                            )
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = day[2],
+                                    color = colorResource(R.color.azul),
+                                    fontWeight = FontWeight.Black
+                                )
+                            }
                         }
-                    }
-                    Card(
-                        modifier = Modifier
-                            .size(width = 315.dp, height = 50.dp)
-                            .padding(horizontal = 4.dp),
-                        colors = CardDefaults.cardColors(Color.White),
-                        shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(width = 3.dp, colorResource(R.color.azul))
-                    ) {
-                        Row(
+                        Card(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .size(width = 315.dp, height = 50.dp)
+                                .padding(horizontal = 4.dp),
+                            colors = CardDefaults.cardColors(Color.White),
+                            shape = RoundedCornerShape(10.dp),
+                            border = BorderStroke(width = 3.dp, colorResource(R.color.azul))
                         ) {
-                            Text(
-                                text = "${evento.horario.take(5)}h - ${evento.nome}",
+                            Row(
                                 modifier = Modifier
-                                    .weight(1f)
-                                    .padding(end = 16.dp)
-                            )
+                                    .fillMaxSize()
+                                    .padding(start = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "${evento.horario.take(5)}h - ${evento.nome}",
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(end = 16.dp)
+                                )
+                            }
                         }
                     }
+
+
                 }
-
-
             }
+        }else{
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .background(  brush = Brush.linearGradient(
+                        colors = listOf(Color(0xFFF9F45C), Color(0xFFFFB600)),
+                    )),
+                horizontalArrangement = Arrangement.Center,
+
+                ) {       Text(
+                text = stringResource(R.string.noFoundEvents),
+                color = colorResource(R.color.azul),
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Black
+            )}
         }
+
     }
 }

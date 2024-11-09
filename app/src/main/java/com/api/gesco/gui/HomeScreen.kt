@@ -126,15 +126,6 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel, context: Co
                         .fillMaxWidth()
                         .aspectRatio(1f)
                         .clickable {
-                            if (it.name == "Horário"){
-                                viewModel.fetchGrid(context, aluno.id_turma)
-                            }else if(it.name == "Eventos"){
-                                viewModel.fetchEvents(context, aluno.id_escola)
-                            }else if(it.name == "Frequencia"){
-                                viewModel.fetchDisciplines(context, aluno.id)
-                            }else if(it.name == "Atividades"){
-                                viewModel.fetchActivities(context, aluno.id_turma)
-                            }
                             navController.navigate(it.navigation)
                                    },
                     shape = RoundedCornerShape(16.dp),
