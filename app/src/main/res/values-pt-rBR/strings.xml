@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gesco</string>
+    <string name="welcome">Bem Vindo!</string>
+    <string name="email">Email</string>
+    <string name="password">Senha</string>
+    <string name="login">Entrar</string>
+    <string name="events">Eventos</string>
+    <string name="frequency">Frequência</string>
+    <string name="activies">Atividades</string>
+    <string name="schedule">Agenda</string>
+    <string name="noFoundAct">Nenhuma atividade encontrada!</string>
+    <string name="noFoundDisc">Nenhuma disciplina encontrada!</string>
+    <string name="noFoundEvents">Nenhum evento encontrado!</string>
+</resources>
